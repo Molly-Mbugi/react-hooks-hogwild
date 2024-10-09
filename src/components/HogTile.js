@@ -1,26 +1,32 @@
 import React, { useState } from 'react';
+import hogs from '../porkers_data';
+import HogTile from './HogTile';
 
-const HogTile = ({ hog }) => {
-  const [showDetails, setShowDetails] = useState(false);
+const App = () => {
+  const [filteredHogs, setFilteredHogs] = useState(hogs);
+  const [showGreased, setShowGreased] = useState(false);
 
-  const handleClick = () => {
-    setShowDetails(!showDetails);
+  const toggleGreasedFilter = () => {
+    setShowGreased(!showGreased);
+    if (showGreased) {
+      setFilteredHogs(hogs);
+    } else {
+      setFilteredHogs(hogs.filter(hog => hog.greased));
+    }
   };
 
   return (
-    <div className="hog-tile" onClick={handleClick}>
-      <h3>{hog.name}</h3>
-      <img src={hog.image} alt={hog.name} />
-      {showDetails && (
-        <div className="hog-details">
-          <p>Specialty: {hog.specialty}</p>
-          <p>Weight: {hog.weight}</p>
-          <p>Greased: {hog.greased ? "Yes" : "No"}</p>
-          <p>Highest Medal Achieved: {hog["highest medal achieved"]}</p>
-        </div>
-      )}
+    <div className="App">
+      <button onClick={toggleGreasedFilter}>
+        {showGreased ? 'Show All Hogs' : 'Show Only Greased Hogs'}
+      </button>
+      <div className="hog-tiles">
+        {filteredHogs.map((hog) => (
+          <HogTile key={hog.name} hog={hog} />
+        ))}
+      </div>
     </div>
   );
 };
 
-export default HogTile;
+export default App;
